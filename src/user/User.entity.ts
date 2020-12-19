@@ -1,12 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import { hashPassword, generateSalt } from '../lib/hash';
 
-export type CreateUserParams = {
-  email: string;
-  username: string;
-  password: string;
-};
-
+// TODO: describe active-record pattern
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -24,11 +19,16 @@ export class User extends BaseEntity {
   @Column()
   salt!: string;
 
-  registerUser(params: CreateUserParams): this {
-    this.email = params.email;
-    this.username = params.username;
-    this.setPassword(params.password);
+  registerUser(email: string, username: string, password: string): this {
+    this.email = email;
+    this.username = username;
+    this.setPassword(password);
     return this;
+  }
+
+  checkPassword(password: string): boolean {
+    const hashedPassword = hashPassword(password, this.salt);
+    return hashedPassword === this.password;
   }
 
   setPassword(password: string): void {

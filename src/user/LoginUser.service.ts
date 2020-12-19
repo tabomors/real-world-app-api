@@ -2,15 +2,14 @@ import { ServiceBase } from '../lib/ServiceBase';
 import * as Joi from 'joi';
 import { User } from './User.entity';
 import { generateToken } from '../lib/jwt';
-import { NotUniqError } from '../lib/errors';
+import { AuthFailedError } from '../lib/errors';
 
-export type CreateUserParams = {
+export type LoginUserParams = {
   email: string;
-  username: string;
   password: string;
 };
 
-export type CreateUserResponse = {
+export type LoginUserResponse = {
   email: string;
   token: string;
   username: string;
@@ -18,9 +17,9 @@ export type CreateUserResponse = {
   image?: string;
 };
 
-export class CreateUser extends ServiceBase<
-  CreateUserParams,
-  CreateUserResponse,
+export class LoginUser extends ServiceBase<
+  LoginUserParams,
+  LoginUserResponse,
   Record<string, any>
 > {
   schema: Joi.SchemaLike = {
@@ -30,13 +29,15 @@ export class CreateUser extends ServiceBase<
   };
 
   async execute(
-    params: CreateUserParams
-  ): Promise<CreateUserResponse | undefined> {
+    params: LoginUserParams
+  ): Promise<LoginUserResponse | undefined> {
     try {
-      const user = new User();
-      await user
-        .registerUser(params.email, params.username, params.password)
-        .save();
+      const user = await User.findOne({ where: { email: params.email } });
+      const isPasswordCorrect = !!user?.checkPassword(params.password);
+
+      if (!user || !isPasswordCorrect) {
+        throw new AuthFailedError();
+      }
 
       const token = generateToken({ id: user.id });
 
@@ -48,7 +49,7 @@ export class CreateUser extends ServiceBase<
         token,
       };
     } catch (e) {
-      throw new NotUniqError();
+      throw new AuthFailedError();
     }
   }
 }
