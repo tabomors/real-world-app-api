@@ -6,7 +6,7 @@ import { NotUniqError } from '../lib/errors';
 
 export type CreateUserResponse = {
   email: string;
-  token?: string;
+  token: string;
   username: string;
   bio?: string;
   image?: string;
