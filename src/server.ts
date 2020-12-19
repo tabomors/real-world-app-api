@@ -12,15 +12,7 @@ import swaggerDoc from '../swagger.json';
 
 const PORT = process.env.PORT || 3000;
 
-createConnection({
-  type: 'postgres',
-  host: process.env.HOST,
-  username: process.env.USERNAME,
-  database: process.env.DATABASE,
-  password: process.env.PASSWORD,
-  entities: ['src/**/*.entity.ts'],
-  synchronize: true,
-}).then(async (connection) => {
+createConnection().then(async (connection) => {
   const app = express();
 
   app.use(cors());
