@@ -14,7 +14,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     res.status(201).send({ user: data });
   } catch (e) {
-    if (AuthFailedError.isAuthFailedError(e)) {
+    if (e instanceof AuthFailedError) {
       res.sendStatus(401);
     } else {
       res.status(422).send(buildErrorResponseBody([e.name]));
