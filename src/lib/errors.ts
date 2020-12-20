@@ -2,6 +2,8 @@ import * as Joi from 'joi';
 
 export type ValidationError = Joi.ValidationError;
 
+export const isValidationError = (e: Error): boolean => Joi.isError(e);
+
 const NOT_UNIQ = 'NOT_UNIQ';
 const AUTH_FAILED = 'AUTH_FAILED';
 
