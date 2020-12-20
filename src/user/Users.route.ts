@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createUser } from './CreateUsers.controller';
+import { createUser } from './CreateUser.controller';
 import { loginUser } from './LoginUser.controller';
 import { checkSession } from '../session/CheckSession.controller';
 import { getUser } from './GetUser.controller';
