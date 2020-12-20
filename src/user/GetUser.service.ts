@@ -17,24 +17,20 @@ export type GetUserResponse = {
 export class GetUser extends ServiceBase<any, GetUserResponse, GetUserContext> {
   schema: Joi.SchemaLike = Joi.any();
   async execute(): Promise<GetUserResponse | undefined> {
-    try {
-      const user = await User.findOne({ where: { id: this.context.userId } });
+    const user = await User.findOne({ where: { id: this.context.userId } });
 
-      if (!user) {
-        throw new AuthFailedError();
-      }
-
-      const token = generateToken({ id: user.id });
-
-      return {
-        email: user.email,
-        username: user.username,
-        bio: user.bio,
-        image: user.image,
-        token,
-      };
-    } catch (e) {
+    if (!user) {
       throw new AuthFailedError();
     }
+
+    const token = generateToken({ id: user.id });
+
+    return {
+      email: user.email,
+      username: user.username,
+      bio: user.bio,
+      image: user.image,
+      token,
+    };
   }
 }
