@@ -13,7 +13,7 @@ export const checkSession = async (
       token: req.headers.authorization,
     });
     res.locals.userId = data?.userId;
-    next();
+    return next();
   } catch (e) {
     if (e instanceof AuthFailedError || isValidationError(e)) {
       res.sendStatus(401);
