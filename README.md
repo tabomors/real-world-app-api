@@ -8,4 +8,20 @@
 `https://github.com/gothinkster/realworld/tree/master/api#realworld-api-spec`
 
 # Migrations:
-`npm run typeorm migration:generate -- -n ExampleMigration`
+
+If you have changed an entity you can generate a migration:
+
+`npx ts-node ./node_modules/.bin/typeorm migration:generate -n NameOfYourChanges`
+
+It will generate the migration with necessary sql scripts.
+
+Then you should run this migration:
+
+`npx ts-node ./node_modules/.bin/typeorm migration:run`
+
+It will apply your changes to the db.
+
+If you decide to revert these changes you can run this:
+
+`npx ts-node ./node_modules/.bin/typeorm migration:revert`
+

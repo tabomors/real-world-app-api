@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { hashPassword, generateSalt } from '../lib/hash';
 
 // TODO: describe active-record pattern
@@ -42,4 +49,10 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   image?: string;
+
+  @CreateDateColumn()
+  created_at?: Date;
+
+  @UpdateDateColumn()
+  updated_at?: Date;
 }
