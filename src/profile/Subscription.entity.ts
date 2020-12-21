@@ -28,7 +28,6 @@ export class Subscription extends BaseEntity {
   created_at!: Date;
 
   static async isFollowing(userId: number, followingId: number): Promise<boolean> {
-    console.log({ user_id: userId, following_id: followingId });
     const subscription = await Subscription.findOne({
       where: { user_id: userId, following_id: followingId },
     });

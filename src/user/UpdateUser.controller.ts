@@ -15,7 +15,6 @@ export const updateUser = async (req: Request, res: Response) => {
 
     res.status(200).send({ user: data });
   } catch (e) {
-    console.log('error', e);
     if (e instanceof AuthFailedError) {
       res.sendStatus(401);
     } else {
