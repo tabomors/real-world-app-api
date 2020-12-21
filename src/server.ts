@@ -9,6 +9,7 @@ dotenv.config();
 
 import userRoutes from './user/Users.route';
 import swaggerDoc from '../swagger.json';
+import profileRoutes from './profile/Profile.route';
 
 const PORT = process.env.PORT || 3000;
 
@@ -21,6 +22,8 @@ createConnection().then(async (connection) => {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
   app.use('/api/users', userRoutes);
+
+  app.use('/api/profiles', profileRoutes);
 
   app.get('/api', (req, res) => {
     res.send('Hello World');

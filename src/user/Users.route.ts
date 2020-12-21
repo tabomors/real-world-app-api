@@ -8,8 +8,8 @@ import { updateUser } from './UpdateUser.controller'
 const router = Router();
 
 router.post('/', createUser);
-router.get('/', checkSession, getUser);
-router.put('/', checkSession, updateUser);
+router.get('/', checkSession(), getUser);
+router.put('/', checkSession(), updateUser);
 router.post('/login', loginUser);
 
 export default router;

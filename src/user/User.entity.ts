@@ -4,9 +4,11 @@ import {
   Column,
   BaseEntity,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm';
 import { hashPassword, generateSalt } from '../lib/hash';
+import { Subscription } from '../profile/Subscription.entity';
 
 // TODO: describe active-record pattern
 @Entity({ name: 'users' })
@@ -55,4 +57,10 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at?: Date;
+
+  @OneToMany(() => Subscription, (subscription) => subscription.user)
+  following!: Promise<Subscription[]>;
+
+  @OneToMany(() => Subscription, (subscription) => subscription.following_user)
+  followers!: Promise<Subscription[]>;
 }
