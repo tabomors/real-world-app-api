@@ -4,7 +4,7 @@ import { User } from './User.entity';
 import { generateToken } from '../lib/jwt';
 import { AuthFailedError } from '../lib/errors';
 
-export type GetUserContext = { userId: string };
+export type GetUserContext = { userId: number };
 
 export type GetUserResponse = {
   email: string;

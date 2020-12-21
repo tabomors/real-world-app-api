@@ -4,7 +4,7 @@ import { User } from './User.entity';
 import { generateToken } from '../lib/jwt';
 import { AuthFailedError } from '../lib/errors';
 
-export type UpdateUserContext = { userId: string };
+export type UpdateUserContext = { userId: number };
 
 export type UpdateUserParams = {
   email?: string;
