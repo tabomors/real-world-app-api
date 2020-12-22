@@ -10,9 +10,10 @@ export const checkSession = (optional = false) => async (
   next: NextFunction
 ) => {
   try {
+    const token = req.headers.authorization ? extractTokenData(req.headers.authorization) : undefined;
     const checkSessionService = new CheckSession({});
     const data = await checkSessionService.run<GetUserAuthParams>({
-      token: req.headers.authorization ? extractTokenData(req.headers.authorization) : undefined,
+      token,
       optional,
     });
     res.locals.userId = data?.userId;

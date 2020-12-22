@@ -5,6 +5,7 @@ import { Tag } from './Tag.entity';
 import { User } from '../user/User.entity';
 import { ForbiddenError } from '../lib/errors';
 import { slugify } from '../lib/url';
+import { ArticleResponse } from './Article.types';
 
 export type CreateArticleParams = {
   title: string;
@@ -14,28 +15,11 @@ export type CreateArticleParams = {
   tagList?: string[];
 };
 
-export type CreateArticleResponse = {
-  title: string;
-  description?: string;
-  body?: string;
-  tagList: string[];
-  createdAt: string;
-  updatedAt: string;
-  favorited: false;
-  favoritesCount: 0;
-  author: {
-    username: string;
-    bio?: string;
-    image?: string;
-    following: false;
-  };
-};
-
 export type CreateArticleContext = { userId: number };
 
 export class CreateArticle extends ServiceBase<
   CreateArticleParams,
-  CreateArticleResponse,
+  ArticleResponse,
   CreateArticleContext
 > {
   schema: Joi.SchemaLike = {
@@ -48,7 +32,7 @@ export class CreateArticle extends ServiceBase<
 
   async execute(
     params: CreateArticleParams
-  ): Promise<CreateArticleResponse | undefined> {
+  ): Promise<ArticleResponse | undefined> {
     const article = new Article();
     article.title = params.title;
     article.slug = params.slug || slugify(params.title);
@@ -65,7 +49,7 @@ export class CreateArticle extends ServiceBase<
 
     await article.save();
 
-    const user = await User.findOne({ where: { id: this.context.userId } })
+    const user = await User.findOne({ where: { id: this.context.userId } });
 
     if (!user) throw new ForbiddenError();
 

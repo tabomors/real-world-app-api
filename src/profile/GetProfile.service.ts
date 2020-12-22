@@ -18,7 +18,7 @@ export type GetProfileResponse = {
 
 export type GetProfileContext = { userId?: string };
 
-export class GetUser extends ServiceBase<
+export class GetProfile extends ServiceBase<
   GetProfileParams,
   GetProfileResponse,
   GetProfileContext

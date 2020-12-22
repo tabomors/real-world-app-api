@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { GetProfileParams, GetUser } from './GetProfile.service';
+import { GetProfileParams, GetProfile } from './GetProfile.service';
 import { AuthFailedError, buildErrorResponseBody } from '../lib/errors';
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const getUserService = new GetUser({ userId: res.locals.userId });
-    const data = await getUserService.run<GetProfileParams>({
+    const getProfileService = new GetProfile({ userId: res.locals.userId });
+    const data = await getProfileService.run<GetProfileParams>({
       username: req.params.username,
     });
     res.status(200).send({ profile: data });
