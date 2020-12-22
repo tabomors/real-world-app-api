@@ -7,6 +7,7 @@ export const isValidationError = (e: Error): boolean => Joi.isError(e);
 const NOT_UNIQ = 'NOT_UNIQ';
 const AUTH_FAILED = 'AUTH_FAILED';
 const NOT_FOUND = 'NOT_FOUND';
+const FORBIDDEN = 'FORBIDDEN';
 
 export class NotUniqError extends Error {
   name = NOT_UNIQ;
@@ -18,6 +19,10 @@ export class AuthFailedError extends Error {
 
 export class NotFoundError extends Error {
   name = NOT_FOUND;
+}
+
+export class ForbiddenError extends Error {
+  name = FORBIDDEN;
 }
 
 export type ErrorResponseBody = {

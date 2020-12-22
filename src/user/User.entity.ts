@@ -5,9 +5,12 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
+  JoinTable,
+  ManyToMany,
 } from 'typeorm';
 import { hashPassword, generateSalt } from '../lib/hash';
+import { Article } from '../article/Article.entity';
 import { Subscription } from '../profile/Subscription.entity';
 
 // TODO: describe active-record pattern
@@ -52,15 +55,22 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   image?: string;
 
-  @CreateDateColumn()
-  created_at?: Date;
+  @OneToMany(() => Article, (article) => article.author)
+  articles?: Article[];
 
-  @UpdateDateColumn()
-  updated_at?: Date;
+  @ManyToMany(() => Article)
+  @JoinTable()
+  favorites!: Article[];
 
   @OneToMany(() => Subscription, (subscription) => subscription.user)
   following!: Promise<Subscription[]>;
 
   @OneToMany(() => Subscription, (subscription) => subscription.following_user)
   followers!: Promise<Subscription[]>;
+
+  @CreateDateColumn()
+  created_at?: Date;
+
+  @UpdateDateColumn()
+  updated_at?: Date;
 }
