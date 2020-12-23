@@ -6,7 +6,6 @@ export const updateArticle = async (req: Request, res: Response) => {
   try {
     const updateArticleService = new UpdateArticle({ userId: res.locals.userId });
     const { article } = req.body;
-    console.log('article.title', article.title);
     const data = await updateArticleService.run<UpdateArticleParams>({
       slug: req.params.slug,
       body: article.body,
@@ -16,7 +15,6 @@ export const updateArticle = async (req: Request, res: Response) => {
 
     res.status(200).send({ article: data });
   } catch (e) {
-    console.log('e', e);
     if (e instanceof NotFoundError) {
       res.sendStatus(404);
     } else if (e instanceof ForbiddenError) {

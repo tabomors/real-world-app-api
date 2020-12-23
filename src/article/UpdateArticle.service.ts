@@ -32,7 +32,6 @@ export class UpdateArticle extends ServiceBase<
   async execute(
     params: UpdateArticleParams
   ): Promise<ArticleResponse | undefined> {
-    console.log('params', params);
 
     const article = await Article.findOne({ where: { slug: params.slug } });
 
