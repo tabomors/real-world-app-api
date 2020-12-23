@@ -11,5 +11,6 @@ router.post('/', createUser);
 router.get('/', checkSession(), getUser);
 router.put('/', checkSession(), updateUser);
 router.post('/login', loginUser);
+router.post('/:slug/comments', )
 
 export default router;

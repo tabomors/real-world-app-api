@@ -17,9 +17,6 @@ export class Comment extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false, unique: true })
-  title!: string;
-
   @Column({ nullable: false })
   body!: string;
 

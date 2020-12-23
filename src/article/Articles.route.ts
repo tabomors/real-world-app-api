@@ -7,6 +7,7 @@ import { updateArticle } from './UpdateArticle.controller';
 import { deleteArticle } from './DeleteArticle.controller';
 import { getArticlesFeed } from './GetArticlesFeed.controller';
 import { getArticles } from './GetArticles.controller';
+import { createComment } from './CreateComment.controller';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.get('/feed', checkSession(), getArticlesFeed);
 router.get('/:slug', checkSession(true), getArticle);
 router.put('/:slug', checkSession(), updateArticle);
 router.delete('/:slug', checkSession(), deleteArticle);
+router.post('/:slug/comments', checkSession(), createComment);
 
 export default router;

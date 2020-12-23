@@ -14,3 +14,16 @@ export type ArticleResponse = {
     following: boolean;
   };
 };
+
+export type CommentResponse = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  body: string;
+  author: {
+    username: string;
+    bio?: string;
+    image?: string;
+    following: boolean;
+  };
+};
