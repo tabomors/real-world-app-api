@@ -9,18 +9,18 @@ export type GetArticlesFeedParams = {
   offset?: number;
 };
 
-export type GetArticleFeedResponse = {
+export type GetArticlesFeedResponse = {
   data: ArticleResponse[];
   count: number;
 };
 
 export type GetArticlesFeedContext = { userId: string };
 
-const emptyResults: GetArticleFeedResponse = { data: [], count: 0 };
+const emptyResults: GetArticlesFeedResponse = { data: [], count: 0 };
 
 export class GetArticlesFeed extends ServiceBase<
   GetArticlesFeedParams,
-  GetArticleFeedResponse,
+  GetArticlesFeedResponse,
   GetArticlesFeedContext
 > {
   schema: Joi.SchemaLike = {
@@ -29,7 +29,7 @@ export class GetArticlesFeed extends ServiceBase<
   };
   async execute(
     params: GetArticlesFeedParams
-  ): Promise<GetArticleFeedResponse | undefined> {
+  ): Promise<GetArticlesFeedResponse | undefined> {
     const subscriptions = await Subscription.find({
       where: { user_id: this.context.userId },
     });
@@ -42,7 +42,6 @@ export class GetArticlesFeed extends ServiceBase<
       skip: params.offset,
     });
     if (articles.length === 0) return emptyResults;
-    // TODO: add some sort of mappers?
     return {
       data: articles.map((a) => ({
         author: {

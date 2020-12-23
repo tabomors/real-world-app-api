@@ -9,11 +9,11 @@ import {
   ManyToMany,
   OneToMany,
   JoinColumn,
-  JoinTable
+  JoinTable,
 } from 'typeorm';
 import { User } from '../user/User.entity';
 import { Comment } from './Comment.entity';
-import { Tag } from './Tag.entity'
+import { Tag } from './Tag.entity';
 
 @Entity({ name: 'articles' })
 export class Article extends BaseEntity {
