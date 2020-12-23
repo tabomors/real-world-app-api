@@ -14,20 +14,23 @@ export class Subscription extends BaseEntity {
   user_id!: number;
 
   @ManyToOne(() => User, (user) => user.following)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user!: User;
 
   @PrimaryColumn()
   following_id!: number;
 
   @ManyToOne(() => User, (user) => user.followers)
-  @JoinColumn({ name: 'following_id' })
+  @JoinColumn({ name: 'following_id', referencedColumnName: 'id' })
   following_user!: User;
 
   @CreateDateColumn()
   created_at!: Date;
 
-  static async isFollowing(userId: number, followingId: number): Promise<boolean> {
+  static async isFollowing(
+    userId: number,
+    followingId: number
+  ): Promise<boolean> {
     const subscription = await Subscription.findOne({
       where: { user_id: userId, following_id: followingId },
     });
