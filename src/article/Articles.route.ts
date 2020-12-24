@@ -9,6 +9,7 @@ import { getArticlesFeed } from './GetArticlesFeed.controller';
 import { getArticles } from './GetArticles.controller';
 import { createComment } from './CreateComment.controller';
 import { getComments } from './GetComments.controller';
+import { deleteComment } from './DeleteComment.controller';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.delete('/:slug', checkSession(), deleteArticle);
 
 router.get('/:slug/comments', checkSession(true), getComments);
 router.post('/:slug/comments', checkSession(), createComment);
+router.delete('/:slug/comments/:id', checkSession(), deleteComment);
 
 export default router;
