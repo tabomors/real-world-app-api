@@ -36,7 +36,7 @@ export class Article extends BaseEntity {
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author!: User;
 
-  @OneToMany(() => Comment, (comment) => comment.article)
+  @OneToMany(() => Comment, (comment) => comment.article, { eager: true })
   comments!: Comment[];
 
   @ManyToMany(() => Tag, { eager: true })

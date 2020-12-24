@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  OneToOne
+  OneToOne,
 } from 'typeorm';
 import { Article } from './Article.entity';
 import { User } from '../user/User.entity';
@@ -24,7 +24,7 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'article_id', referencedColumnName: 'id' })
   article!: Article;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { eager: true })
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author!: User;
 
@@ -32,5 +32,5 @@ export class Comment extends BaseEntity {
   created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at?: Date;
+  updated_at!: Date;
 }
