@@ -25,27 +25,31 @@ export class GetArticle extends ServiceBase<
   ): Promise<ArticleResponse | undefined> {
     const article = await Article.findOne({
       where: { slug: params.slug },
+      relations: ['author']
     });
-
 
     if (!article) {
       throw new NotFoundError();
     }
 
     const currentUser = this.context.userId
-      ? await User.findOne({ where: { id: this.context.userId } })
+      ? await User.findOne({
+          where: { id: this.context.userId },
+
+        })
       : undefined;
 
     const following = currentUser?.id
-      ? await Subscription.isFollowing(currentUser?.id, article.author.id)
+      ? await Subscription.isFollowing(currentUser?.id, article.author_id)
       : false;
+    const favorited = (currentUser?.favorites || []).some((a) => a.id === article.id);
 
     return {
       title: article.title,
       description: article.description,
       body: article.body,
-      favorited: false, // TODO: add
-      favoritesCount: 0, // TODO: add
+      favorited,
+      favoritesCount: article.favorites_count,
       tagList: (article.tags || []).map((tag) => tag.title),
       createdAt: article.created_at.toISOString(),
       updatedAt: article.updated_at.toISOString(),

@@ -24,7 +24,10 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'article_id', referencedColumnName: 'id' })
   article!: Article;
 
-  @OneToOne(() => User, { eager: true })
+  @Column({ nullable: false })
+  author_id!: number;
+
+  @OneToOne(() => User)
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author!: User;
 

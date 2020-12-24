@@ -22,11 +22,14 @@ export class DeleteComment extends ServiceBase<
   };
 
   async execute(params: DeleteCommentParams): Promise<boolean | undefined> {
-    const article = await Article.findOne({ where: { slug: params.slug } });
+    const article = await Article.findOne({
+      where: { slug: params.slug },
+      relations: ['comments'],
+    });
     const comment = await Comment.findOne({ where: { id: params.id } });
 
     if (!comment || !article) throw new NotFoundError();
-    if (comment?.author.id !== this.context.userId) throw new ForbiddenError();
+    if (comment?.author_id !== this.context.userId) throw new ForbiddenError();
 
     if (article.comments.some((c) => c.id === comment.id)) {
       article.comments = article.comments.filter((c) => c.id !== comment.id);

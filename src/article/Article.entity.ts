@@ -32,16 +32,22 @@ export class Article extends BaseEntity {
   @Column({ nullable: true })
   body?: string;
 
-  @ManyToOne(() => User, (user) => user.articles, { eager: true })
+  @Column({ nullable: false })
+  author_id!: number;
+
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author!: User;
 
-  @OneToMany(() => Comment, (comment) => comment.article, { eager: true })
+  @OneToMany(() => Comment, (comment) => comment.article)
   comments!: Comment[];
 
   @ManyToMany(() => Tag, { eager: true })
   @JoinTable()
   tags!: Tag[];
+
+  @Column({ default: 0 })
+  favorites_count!: number;
 
   @CreateDateColumn()
   created_at!: Date;

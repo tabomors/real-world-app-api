@@ -1,6 +1,7 @@
 import { ServiceBase } from '../lib/ServiceBase';
 import * as Joi from 'joi';
 import { Article } from './Article.entity';
+import { User } from '../user/User.entity';
 import { Subscription } from '../profile/Subscription.entity';
 import { ArticleResponse } from './Article.types';
 
@@ -17,7 +18,9 @@ export type GetArticlesResponse = {
   count: number;
 };
 
-export type GetArticlesContext = { userId: string };
+export type GetArticlesContext = { userId?: string };
+
+export const emptyResults: GetArticlesResponse = { data: [], count: 0 };
 
 export class GetArticles extends ServiceBase<
   GetArticlesParams,
@@ -31,6 +34,24 @@ export class GetArticles extends ServiceBase<
     favorited: Joi.string().optional().allow(null),
     tag: Joi.string().optional().allow(null),
   };
+
+  async fetchFollowingIds(): Promise<number[]> {
+    const subscriptions = await Subscription.find({
+      where: { user_id: this.context.userId },
+    });
+    return subscriptions.map((s) => s.following_id);
+  }
+
+  async fetchFavoritedIds(): Promise<number[]> {
+    const user = this.context.userId
+      ? await User.findOne({
+          where: { id: this.context.userId },
+        })
+      : undefined;
+    const favoritedArticles: Article[] = user?.favorites || [];
+    return favoritedArticles.map((a) => a.id);
+  }
+
   async execute(
     params: GetArticlesParams
   ): Promise<GetArticlesResponse | undefined> {
@@ -48,7 +69,11 @@ export class GetArticles extends ServiceBase<
     }
 
     if (params.favorited) {
-      // TODO: add
+      const author = await User.findOne({
+        where: { username: params.favorited }
+      });
+      const favorites = (author?.favorites || []).map((a) => a.id);
+      qb.andWhere('article.authorId IN (:ids)', { ids: favorites });
     }
 
     if (params.limit) {
@@ -61,31 +86,33 @@ export class GetArticles extends ServiceBase<
 
     const [articles, count] = await qb.getManyAndCount();
 
-    let followingIds: number[] = [];
-    if (count !== 0) {
-      const subscriptions = await Subscription.find({
-        where: { user_id: this.context.userId },
-      });
-      followingIds = subscriptions.map((s) => s.following_id);
-    }
+    if (count === 0) return emptyResults;
+
+    const followingIds = await this.fetchFollowingIds();
+    const favoritedIds = await this.fetchFavoritedIds();
 
     return {
-      data: articles.map((a) => ({
-        author: {
-          following: followingIds.includes(a.author.id),
-          username: a.author.username,
-          bio: a.author.bio,
-          image: a.author.image,
-        },
-        createdAt: a.created_at.toISOString(),
-        updatedAt: a.updated_at.toISOString(),
-        favorited: false, // TODO: add
-        favoritesCount: 0, // TODO: add,
-        tagList: a.tags.map((t) => t.title),
-        title: a.title,
-        body: a.body,
-        description: a.description,
-      })),
+      data: articles.map((a) => {
+        const favorited = favoritedIds.includes(a.id);
+        const following = followingIds.includes(a.author.id);
+
+        return {
+          createdAt: a.created_at.toISOString(),
+          updatedAt: a.updated_at.toISOString(),
+          favorited,
+          favoritesCount: a.favorites_count,
+          tagList: a.tags.map((t) => t.title),
+          title: a.title,
+          body: a.body,
+          description: a.description,
+          author: {
+            following,
+            username: a.author.username,
+            bio: a.author.bio,
+            image: a.author.image,
+          },
+        };
+      }),
       count,
     };
   }

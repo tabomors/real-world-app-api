@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import { hashPassword, generateSalt } from '../lib/hash';
 import { Article } from '../article/Article.entity';
-import { Subscription } from '../profile/Subscription.entity';
 
 // TODO: describe active-record pattern
 @Entity({ name: 'users' })
@@ -58,15 +57,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Article, (article) => article.author)
   articles?: Article[];
 
-  @ManyToMany(() => Article)
+  @ManyToMany(() => Article, { eager: true })
   @JoinTable()
-  favorites!: Article[];
-
-  @OneToMany(() => Subscription, (subscription) => subscription.user)
-  following!: Promise<Subscription[]>;
-
-  @OneToMany(() => Subscription, (subscription) => subscription.following_user)
-  followers!: Promise<Subscription[]>;
+  favorites?: Article[];
 
   @CreateDateColumn()
   created_at?: Date;

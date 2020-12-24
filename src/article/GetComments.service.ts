@@ -26,7 +26,10 @@ export class GetComments extends ServiceBase<
   async execute(
     params: GetCommentsParams
   ): Promise<GetCommentsResponse | undefined> {
-    const article = await Article.findOne({ where: { slug: params.slug } });
+    const article = await Article.findOne({
+      where: { slug: params.slug },
+      relations: ['comments', 'comments.author'],
+    });
     if (!article) throw new NotFoundError();
     const comments = article.comments;
 

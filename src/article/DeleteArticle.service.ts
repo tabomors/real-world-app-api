@@ -22,7 +22,7 @@ export class DeleteArticle extends ServiceBase<
     const article = await Article.findOne({ where: { slug: params.slug } });
 
     if (!article) throw new NotFoundError();
-    if (article?.author.id !== this.context.userId) throw new ForbiddenError();
+    if (article?.author_id !== this.context.userId) throw new ForbiddenError();
 
     await article.remove();
 
