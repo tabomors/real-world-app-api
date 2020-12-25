@@ -4,6 +4,7 @@ import {
   GetArticlesFeedParams,
 } from './GetArticlesFeed.service';
 import { buildErrorResponseBody } from '../lib/errors';
+import { parseNumberLikeQP } from '../lib/url';
 
 export const getArticlesFeed = async (req: Request, res: Response) => {
   try {
@@ -11,11 +12,8 @@ export const getArticlesFeed = async (req: Request, res: Response) => {
       userId: res.locals.userId,
     });
 
-    // TODO: move to helper
-    const parsedLimit = parseInt(req.query.limit?.toString() || '', 10);
-    const limit = isNaN(parsedLimit) ? undefined : parsedLimit;
-    const parsedOffset = parseInt(req.query.offset?.toString() || '', 10);
-    const offset = isNaN(parsedOffset) ? undefined : parsedOffset;
+    const limit = parseNumberLikeQP(req.query.limit as string);
+    const offset = parseNumberLikeQP(req.query.offset as string);
 
     const data = await getArticlesFeed.run<GetArticlesFeedParams>({
       limit,

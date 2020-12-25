@@ -15,13 +15,13 @@ import tagRoutes from './article/Tags.route';
 
 const PORT = process.env.PORT || 3000;
 
-createConnection().then(async (connection) => {
+createConnection().then(async () => {
   const app = express();
 
   app.use(cors());
   app.use(bodyParser.json());
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
   app.use('/api/users', manyUsersRoutes);
 
@@ -32,10 +32,6 @@ createConnection().then(async (connection) => {
   app.use('/api/articles', articleRoutes);
 
   app.use('/api/tags', tagRoutes);
-
-  app.get('/api', (req, res) => {
-    res.send('Hello World');
-  });
 
   app.listen(PORT, () => {
     console.log(`Server is running in http://localhost:${PORT}`);
