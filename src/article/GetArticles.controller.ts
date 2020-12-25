@@ -19,10 +19,10 @@ export const getArticles = async (req: Request, res: Response) => {
       offset,
       author: req.query.author as string,
       favorited: req.query.favorited as string,
-      tag: req.query.tag as string
+      tag: req.query.tag as string,
     });
 
-    res.status(200).send({ articles: data?.data });
+    res.status(200).send({ articles: data?.data, articlesCount: data?.count });
   } catch (e) {
     res.status(422).send(buildErrorResponseBody([e.name]));
   }

@@ -49,12 +49,11 @@ export class UpdateArticle extends ServiceBase<
 
     const { author } = article;
 
-    console.log('author', author);
-
     const favorited = (author.favorites || []).some((a) => a.id === article.id);
 
     return {
       title: article.title,
+      slug: article.slug,
       description: article.description,
       body: article.body,
       favorited,

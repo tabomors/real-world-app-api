@@ -38,6 +38,7 @@ export class CreateArticle extends ServiceBase<
     article.slug = params.slug || slugify(params.title);
     article.description = params.description;
     article.body = params.body;
+    article.author_id = this.context.userId;
 
     const tags = (params.tagList || []).map((tag) =>
       Tag.create({ title: tag })
@@ -59,6 +60,7 @@ export class CreateArticle extends ServiceBase<
 
     return {
       title: article.title,
+      slug: article.slug,
       description: article.description,
       body: article.body,
       favorited: false,

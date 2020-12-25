@@ -48,6 +48,7 @@ export class FavoriteArticle extends ServiceBase<
 
     return {
       title: article.title,
+      slug: article.slug,
       description: article.description,
       body: article.body,
       favorited: true,

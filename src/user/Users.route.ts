@@ -5,12 +5,13 @@ import { checkSession } from '../session/CheckSession.controller';
 import { getUser } from './GetUser.controller';
 import { updateUser } from './UpdateUser.controller'
 
-const router = Router();
+export const manyUsersRoutes = Router();
 
-router.post('/', createUser);
-router.get('/', checkSession(), getUser);
-router.put('/', checkSession(), updateUser);
-router.post('/login', loginUser);
-router.post('/:slug/comments', )
+manyUsersRoutes.post('/', createUser);
+manyUsersRoutes.post('/login', loginUser);
 
-export default router;
+export const oneUserRoutes = Router();
+
+oneUserRoutes.get('/', checkSession(), getUser);
+oneUserRoutes.put('/', checkSession(), updateUser);
+

@@ -2,7 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthFailedError, isValidationError } from '../lib/errors';
 import { CheckSession, GetUserAuthParams } from './CheckSession.service';
 
-const extractTokenData = (token: string) => token.replace(/Bearer /, '');
+const extractTokenData = (token?: string) => {
+  if (!token) return;
+  if (token.split(' ')[0] === 'Token' || token.split(' ')[0] === 'Bearer') {
+    return token.split(' ')[1];
+  }
+
+  return token;
+};
 
 export const checkSession = (optional = false) => async (
   req: Request,
@@ -10,7 +17,8 @@ export const checkSession = (optional = false) => async (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers.authorization ? extractTokenData(req.headers.authorization) : undefined;
+    const token = extractTokenData(req.headers.authorization);
+
     const checkSessionService = new CheckSession({});
     const data = await checkSessionService.run<GetUserAuthParams>({
       token,

@@ -73,6 +73,7 @@ export class GetArticlesFeed extends ServiceBase<
           favoritesCount: a.favorites_count,
           tagList: a.tags.map((t) => t.title),
           title: a.title,
+          slug: a.slug,
           body: a.body,
           description: a.description,
         };

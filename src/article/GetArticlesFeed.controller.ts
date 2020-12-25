@@ -22,7 +22,7 @@ export const getArticlesFeed = async (req: Request, res: Response) => {
       offset
     });
 
-    res.status(200).send({ article: data });
+    res.status(200).send({ articles: data?.data, articlesCount: data?.count });
   } catch (e) {
     res.status(422).send(buildErrorResponseBody([e.name]));
   }

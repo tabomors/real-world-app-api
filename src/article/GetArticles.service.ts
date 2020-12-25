@@ -68,12 +68,19 @@ export class GetArticles extends ServiceBase<
       qb.andWhere('author.username = :username', { username: params.author });
     }
 
+    // TODO: test it again
     if (params.favorited) {
       const author = await User.findOne({
-        where: { username: params.favorited }
+        where: { username: params.favorited },
       });
       const favorites = (author?.favorites || []).map((a) => a.id);
-      qb.andWhere('article.authorId IN (:ids)', { ids: favorites });
+
+      // NOTE: typeorm breaks on empty array
+      if (favorites.length) {
+        qb.andWhere('articles.id IN (:...ids)', {
+          ids: favorites,
+        });
+      } else return emptyResults
     }
 
     if (params.limit) {
@@ -103,6 +110,7 @@ export class GetArticles extends ServiceBase<
           favoritesCount: a.favorites_count,
           tagList: a.tags.map((t) => t.title),
           title: a.title,
+          slug: a.slug,
           body: a.body,
           description: a.description,
           author: {

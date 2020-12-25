@@ -45,7 +45,7 @@ export class GetComments extends ServiceBase<
       data: comments.map((c) => ({
         id: c.id,
         createdAt: c.created_at.toISOString(),
-        updatedAt: c.updated_at.toUTCString(),
+        updatedAt: c.updated_at.toISOString(),
         body: c.body,
         author: {
           following: followingIds.includes(c.author.id),
