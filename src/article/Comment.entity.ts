@@ -24,10 +24,10 @@ export class Comment extends BaseEntity {
   @JoinColumn({ name: 'article_id', referencedColumnName: 'id' })
   article!: Article;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: false })
   author_id!: number;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'author_id', referencedColumnName: 'id' })
   author!: User;
 

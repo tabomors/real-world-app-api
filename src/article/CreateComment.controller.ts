@@ -15,7 +15,7 @@ export const createComment = async (req: Request, res: Response) => {
       body: req.body.comment.body,
     });
 
-    res.status(201).send({ article: data });
+    res.status(201).send({ comment: data });
   } catch (e) {
     if (e instanceof NotFoundError) {
       res.sendStatus(404);
