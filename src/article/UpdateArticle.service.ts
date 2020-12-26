@@ -53,7 +53,7 @@ export class UpdateArticle extends ServiceBase<
 
     return mapArticleModelToArticleResponse({
       article,
-      user: author,
+      author,
       following: false,
       favorited,
     });

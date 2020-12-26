@@ -105,7 +105,7 @@ export class GetArticles extends ServiceBase<
         const following = followingIds.includes(article.author.id);
         return mapArticleModelToArticleResponse({
           article,
-          user: article.author,
+          author: article.author,
           favorited,
           following,
         });

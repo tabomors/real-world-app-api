@@ -1,14 +1,15 @@
-import { ArticleResponse } from './Article.types';
+import { ArticleResponse, CommentResponse } from './Article.types';
 import { Article } from './Article.entity';
+import { Comment } from './Comment.entity';
 import { User } from '../user/User.entity';
 
 export const mapArticleModelToArticleResponse = (input: {
   article: Article;
-  user: User;
+  author: User;
   favorited: boolean;
   following: boolean;
 }): ArticleResponse => {
-  const { article, user, favorited, following } = input;
+  const { article, author, favorited, following } = input;
   return {
     title: article.title,
     slug: article.slug,
@@ -20,10 +21,30 @@ export const mapArticleModelToArticleResponse = (input: {
     createdAt: article.created_at.toISOString(),
     updatedAt: article.updated_at.toISOString(),
     author: {
-      username: user.username,
-      bio: user.bio,
-      image: user.image,
+      username: author.username,
+      bio: author.bio,
+      image: author.image,
       following,
+    },
+  };
+};
+
+export const mapCommentModelToCommentResponse = (input: {
+  comment: Comment;
+  author: User;
+  following: boolean;
+}): CommentResponse => {
+  const { comment, author, following } = input;
+  return {
+    body: comment.body,
+    id: comment.id,
+    createdAt: comment.created_at.toISOString(),
+    updatedAt: comment.created_at.toISOString(),
+    author: {
+      following,
+      username: author.username,
+      bio: author.bio,
+      image: author.image,
     },
   };
 };

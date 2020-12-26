@@ -4,6 +4,7 @@ import { Article } from './Article.entity';
 import { Subscription } from '../profile/Subscription.entity';
 import { CommentResponse } from './Article.types';
 import { NotFoundError } from '../lib/errors';
+import { mapCommentModelToCommentResponse } from './Article.mappers';
 
 export type GetCommentsParams = {
   slug: string;
@@ -42,18 +43,14 @@ export class GetComments extends ServiceBase<
     }
 
     return {
-      data: comments.map((c) => ({
-        id: c.id,
-        createdAt: c.created_at.toISOString(),
-        updatedAt: c.updated_at.toISOString(),
-        body: c.body,
-        author: {
-          following: followingIds.includes(c.author.id),
-          username: c.author.username,
-          bio: c.author.bio,
-          image: c.author.image,
-        },
-      })),
+      data: comments.map((comment) => {
+        const following = followingIds.includes(comment.author.id);
+        return mapCommentModelToCommentResponse({
+          comment,
+          author: comment.author,
+          following
+        });
+      }),
     };
   }
 }

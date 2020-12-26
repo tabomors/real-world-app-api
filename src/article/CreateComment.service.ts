@@ -5,6 +5,7 @@ import { Article } from './Article.entity';
 import { Comment } from './Comment.entity';
 import { CommentResponse } from './Article.types';
 import { NotFoundError, AuthFailedError } from '../lib/errors';
+import { mapCommentModelToCommentResponse } from './Article.mappers';
 
 export type CreateCommentParams = {
   slug: string;
@@ -36,17 +37,10 @@ export class CreateComment extends ServiceBase<
     comment.author = author;
     await comment.save();
 
-    return {
-      body: comment.body,
-      id: comment.id,
-      createdAt: comment.created_at.toISOString(),
-      updatedAt: comment.created_at.toISOString(),
-      author: {
-        following: false,
-        username: author.username,
-        bio: author.bio,
-        image: author.image,
-      },
-    };
+    return mapCommentModelToCommentResponse({
+      comment,
+      author,
+      following: false,
+    });
   }
 }

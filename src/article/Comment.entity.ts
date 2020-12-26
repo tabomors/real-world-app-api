@@ -7,7 +7,6 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
-  OneToOne,
 } from 'typeorm';
 import { Article } from './Article.entity';
 import { User } from '../user/User.entity';

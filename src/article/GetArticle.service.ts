@@ -48,7 +48,7 @@ export class GetArticle extends ServiceBase<
 
     return mapArticleModelToArticleResponse({
       article,
-      user: article.author,
+      author: article.author,
       following,
       favorited,
     });

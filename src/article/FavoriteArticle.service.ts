@@ -51,7 +51,7 @@ export class FavoriteArticle extends ServiceBase<
 
     return mapArticleModelToArticleResponse({
       article,
-      user: article.author,
+      author: article.author,
       favorited: true,
       following,
     });

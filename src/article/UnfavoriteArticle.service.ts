@@ -53,7 +53,7 @@ export class UnfavoriteArticle extends ServiceBase<
 
     return mapArticleModelToArticleResponse({
       article,
-      user: article.author,
+      author: article.author,
       favorited: false,
       following,
     });
