@@ -5,6 +5,7 @@ import { Subscription } from '../profile/Subscription.entity';
 import { Article } from './Article.entity';
 import { ArticleResponse } from './Article.types';
 import { NotFoundError, AuthFailedError } from '../lib/errors';
+import { mapArticleModelToArticleResponse } from './Article.mappers';
 
 export type FavoriteArticleParams = {
   slug: string;
@@ -24,12 +25,14 @@ export class FavoriteArticle extends ServiceBase<
   async execute(
     params: FavoriteArticleParams
   ): Promise<ArticleResponse | undefined> {
-    const article = await Article.findOne({ where: { slug: params.slug } });
+    const article = await Article.findOne({
+      where: { slug: params.slug },
+      relations: ['author'],
+    });
     if (!article) throw new NotFoundError();
 
     const user = await User.findOne({
       where: { id: this.context.userId },
-
     });
     if (!user) throw new AuthFailedError();
     const following = await Subscription.isFollowing(
@@ -46,22 +49,11 @@ export class FavoriteArticle extends ServiceBase<
       await article.save();
     }
 
-    return {
-      title: article.title,
-      slug: article.slug,
-      description: article.description,
-      body: article.body,
+    return mapArticleModelToArticleResponse({
+      article,
+      user: article.author,
       favorited: true,
-      favoritesCount: article.favorites_count,
-      tagList: article.tags.map((tag) => tag.title),
-      createdAt: article.created_at.toISOString(),
-      updatedAt: article.updated_at.toISOString(),
-      author: {
-        username: user.username,
-        bio: user.bio,
-        image: user.image,
-        following,
-      },
-    };
+      following,
+    });
   }
 }

@@ -3,6 +3,7 @@ import * as Joi from 'joi';
 import { Article } from './Article.entity';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
 import { ArticleResponse } from './Article.types';
+import { mapArticleModelToArticleResponse } from './Article.mappers';
 
 export type UpdateArticleParams = {
   slug: string;
@@ -32,7 +33,6 @@ export class UpdateArticle extends ServiceBase<
   async execute(
     params: UpdateArticleParams
   ): Promise<ArticleResponse | undefined> {
-
     const article = await Article.findOne({
       where: { slug: params.slug },
       relations: ['author'],
@@ -51,22 +51,11 @@ export class UpdateArticle extends ServiceBase<
 
     const favorited = (author.favorites || []).some((a) => a.id === article.id);
 
-    return {
-      title: article.title,
-      slug: article.slug,
-      description: article.description,
-      body: article.body,
+    return mapArticleModelToArticleResponse({
+      article,
+      user: author,
+      following: false,
       favorited,
-      favoritesCount: article.favorites_count,
-      tagList: article.tags.map((tag) => tag.title),
-      createdAt: article.created_at.toISOString(),
-      updatedAt: article.updated_at.toISOString(),
-      author: {
-        username: author.username,
-        bio: author.bio,
-        image: author.image,
-        following: false,
-      },
-    };
+    });
   }
 }

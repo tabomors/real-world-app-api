@@ -4,6 +4,7 @@ import { Article } from './Article.entity';
 import { Subscription } from '../profile/Subscription.entity';
 import { ArticleResponse } from './Article.types';
 import { User } from '../user/User.entity';
+import { mapArticleModelToArticleResponse } from './Article.mappers';
 
 export type GetArticlesFeedParams = {
   limit?: number;
@@ -32,7 +33,6 @@ export class GetArticlesFeed extends ServiceBase<
   async fetchFavoritedIds(): Promise<number[]> {
     const user = await User.findOne({
       where: { id: this.context.userId },
-
     });
     const favoritedArticles: Article[] = user?.favorites || [];
     return favoritedArticles.map((a) => a.id);
@@ -51,32 +51,21 @@ export class GetArticlesFeed extends ServiceBase<
       where: whereInput,
       take: params.limit,
       skip: params.offset,
-      relations: ['author']
+      relations: ['author'],
     });
     if (articles.length === 0) return emptyResults;
     const favoritedIds = await this.fetchFavoritedIds();
 
     return {
-      data: articles.map((a) => {
-        const favorited = favoritedIds.includes(a.id);
+      data: articles.map((article) => {
+        const favorited = favoritedIds.includes(article.id);
 
-        return {
-          author: {
-            following: true,
-            username: a.author.username,
-            bio: a.author.bio,
-            image: a.author.image,
-          },
-          createdAt: a.created_at.toISOString(),
-          updatedAt: a.updated_at.toISOString(),
+        return mapArticleModelToArticleResponse({
+          article,
+          user: article.author,
+          following: true,
           favorited,
-          favoritesCount: a.favorites_count,
-          tagList: a.tags.map((t) => t.title),
-          title: a.title,
-          slug: a.slug,
-          body: a.body,
-          description: a.description,
-        };
+        });
       }),
       count: articles.length,
     };

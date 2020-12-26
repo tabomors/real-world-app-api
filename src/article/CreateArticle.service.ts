@@ -6,6 +6,7 @@ import { User } from '../user/User.entity';
 import { ForbiddenError } from '../lib/errors';
 import { slugify } from '../lib/url';
 import { ArticleResponse } from './Article.types';
+import { mapArticleModelToArticleResponse } from './Article.mappers';
 
 export type CreateArticleParams = {
   title: string;
@@ -58,22 +59,11 @@ export class CreateArticle extends ServiceBase<
 
     await user.save();
 
-    return {
-      title: article.title,
-      slug: article.slug,
-      description: article.description,
-      body: article.body,
+    return mapArticleModelToArticleResponse({
+      article,
+      user,
       favorited: false,
-      favoritesCount: 0,
-      tagList: article.tags.map((tag) => tag.title),
-      createdAt: article.created_at.toISOString(),
-      updatedAt: article.updated_at.toISOString(),
-      author: {
-        username: user.username,
-        bio: user.bio,
-        image: user.image,
-        following: false,
-      },
-    };
+      following: false,
+    });
   }
 }

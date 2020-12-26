@@ -4,6 +4,7 @@ import { Article } from './Article.entity';
 import { User } from '../user/User.entity';
 import { Subscription } from '../profile/Subscription.entity';
 import { ArticleResponse } from './Article.types';
+import { mapArticleModelToArticleResponse } from './Article.mappers';
 
 export type GetArticlesParams = {
   limit?: number;
@@ -80,7 +81,7 @@ export class GetArticles extends ServiceBase<
         qb.andWhere('articles.id IN (:...ids)', {
           ids: favorites,
         });
-      } else return emptyResults
+      } else return emptyResults;
     }
 
     if (params.limit) {
@@ -99,27 +100,15 @@ export class GetArticles extends ServiceBase<
     const favoritedIds = await this.fetchFavoritedIds();
 
     return {
-      data: articles.map((a) => {
-        const favorited = favoritedIds.includes(a.id);
-        const following = followingIds.includes(a.author.id);
-
-        return {
-          createdAt: a.created_at.toISOString(),
-          updatedAt: a.updated_at.toISOString(),
+      data: articles.map((article) => {
+        const favorited = favoritedIds.includes(article.id);
+        const following = followingIds.includes(article.author.id);
+        return mapArticleModelToArticleResponse({
+          article,
+          user: article.author,
           favorited,
-          favoritesCount: a.favorites_count,
-          tagList: a.tags.map((t) => t.title),
-          title: a.title,
-          slug: a.slug,
-          body: a.body,
-          description: a.description,
-          author: {
-            following,
-            username: a.author.username,
-            bio: a.author.bio,
-            image: a.author.image,
-          },
-        };
+          following,
+        });
       }),
       count,
     };
