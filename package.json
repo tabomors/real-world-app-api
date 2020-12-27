@@ -2,9 +2,8 @@
   "name": "real-world-app-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
   "scripts": {
-    "start": "node .",
+    "start": "cd dist && node src/server.js",
     "dev": "nodemon src/server.ts",
     "debug": "nodemon --inspect src/server.ts",
     "build": "tsc",
