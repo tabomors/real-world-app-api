@@ -22,6 +22,7 @@
   },
   "include": [
     "src/**/*",
-    "swagger.json"
+    "swagger.json",
+    "ormconfig.js"
   ]
 }

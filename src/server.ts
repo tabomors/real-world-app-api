@@ -1,4 +1,3 @@
-
 import 'reflect-metadata';
 import { getConnectionOptions } from 'typeorm';
 import connection from './lib/connection';
@@ -15,8 +14,9 @@ async function main() {
   app.set('port', PORT);
 
   const server = http.createServer(app);
-  server.listen(PORT);
+  server.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+  });
 }
 
 main();
-

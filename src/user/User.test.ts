@@ -11,7 +11,7 @@ beforeAll(async () => {
   const connectionOptions = await getConnectionOptions();
   await connection.create({
     ...connectionOptions,
-    database: 'real_world_app_test' as any,
+    database: process.env.DB_TEST_DATABASE as any,
     synchronize: true,
     logging: false,
   });

@@ -1,11 +1,14 @@
-# Start development:
-`npm run dev`
+# About real world app:
 
-# Run tests:
+https://github.com/gothinkster/realworld
+
+# Docker
+
+`docker-compose up`
+
+# Run postman's tests:
+
 `APIURL=http://localhost:3000/api ./run-api-tests.sh`
-
-# About real world app's api spec:
-`https://github.com/gothinkster/realworld/tree/master/api#realworld-api-spec`
 
 # Migrations:
 
@@ -24,4 +27,3 @@ It will apply your changes to the db.
 If you decide to revert these changes you can run this:
 
 `npx ts-node ./node_modules/.bin/typeorm migration:revert`
-
