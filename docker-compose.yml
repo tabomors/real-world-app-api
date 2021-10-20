@@ -1,4 +1,4 @@
-# docker-compose.yml
+# TODO: refactor it
 
 version: "3.7"
 services:
@@ -10,8 +10,8 @@ services:
       - POSTGRES_DB=${DB_DATABASE}
     volumes:
       - real-world-app-api-db:/var/lib/postgresql/data
-    expose:
-      - 5432
+    # expose:
+    #   - 5432
 
   real-world-app-api:
     build:

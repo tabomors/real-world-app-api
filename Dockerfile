@@ -2,13 +2,11 @@ FROM node:14
 
 WORKDIR /usr/src/app
 
-COPY . ./
+COPY ./app ./
 
-RUN npm install
+RUN npm ci
 
 RUN npm run build
-
-RUN chmod +x ./wait-for-it.sh
 
 EXPOSE 3000
 

@@ -15,6 +15,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     res.status(201).send({ user: data });
   } catch (e) {
+    console.log('e', e);
     if (e instanceof NotUniqError) {
       res.status(422).send(buildErrorResponseBody([e.name]));
     } else {
